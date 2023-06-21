@@ -66,3 +66,117 @@ const jobs = [
     postDate: "6 days ago",
   },
 ];
+
+
+console.log(document);
+console.log(document.body);
+console.dir(document.body);
+
+console.log(document.getElementById('jobs').id);
+console.log(document.getElementById('jobs').textContent);
+console.log(document.querySelector('#jobs'));
+
+const firstJob = document.getElementsByClassName("j-desc")[0];
+// we could also do document.querySelector(".j-desc") to get the same element as by default it will retrieve the first match to the CSS selector
+console.log(firstJob);
+console.log(firstJob.parentElement) // section#jobs
+console.log(firstJob.children) // HTMLCollection(2) [img.j-desc__company-image, div.j-desc__details]
+const secondJob = firstJob.nextElementSibling;
+console.log(secondJob) // <div class="j-desc">...</div>
+console.log(firstJob === secondJob.previousElementSibling)
+
+console.log(firstJob.lastElementChild.textContent);
+console.log(secondJob.lastElementChild.textContent);
+
+console.log(firstJob.querySelector(".j-desc__job-title").textContent)
+console.log(secondJob.querySelector(".j-desc__job-title").textContent)
+
+document.querySelectorAll('.j-desc').forEach(jobDiv => {
+  const jobTitle = jobDiv.querySelector('.j-desc__job-title').textContent;
+  console.log(jobTitle);
+});
+
+const firstJobImage = firstJob.querySelector(".j-desc__company-image");
+console.log(firstJobImage.getAttribute("alt")); // logs: "Patterned Learning AI"
+
+firstJobImage.setAttribute("alt", "Patterned Learning AI - Empowering with AI");
+console.log(firstJobImage.getAttribute("alt")); // logs: "Patterned Learning AI - Empowering with AI"`
+
+const firstJobTitle = firstJob.querySelector(".j-desc__job-title");
+console.log(firstJobTitle.textContent); // logs: "Junior Front-End Developer"
+
+firstJobTitle.textContent = "Junior Front-End Developer (React)";
+console.log(firstJobTitle.textContent); // logs: "Junior Front-End Developer (React)"
+
+
+// firstJobTitle.style.color = 'blue';
+// firstJobTitle.style.textAlign = 'center';
+firstJobTitle.styleContent = "Front-end Developer";
+console.log(firstJobTitle.classList);
+
+// function createNewJob() {
+//   // Create new job description div
+//   const jobDiv = document.createElement('div');
+//   jobDiv.className = 'j-desc'; //class variable is taken, use something other than class
+
+//   // Create job details div
+//   const jobDetails = document.createElement('div');
+//   jobDetails.className = 'j-desc__details';
+
+//   // Create job title
+//   const jobTitle = document.createElement('h2')
+//   jobTitle.className = 'j-desc__job-title';
+//   jobTitle.textContent = 'Newly Added Job Title';  
+
+//   // Append newJobTitle to newJobDetails
+//   jobDetails.appendChild(jobTitle);
+
+//   // Append newJobDetails to newJob
+//   jobDiv.appendChild(jobDetails);
+  
+//   // Append jobDiv to the jobs section
+//   document.querySelector('section#jobs').appendChild(jobDiv);
+// }
+
+// createNewJob();
+
+function createNewJob() {
+  const jobDiv = document.createElement('div');
+  jobDiv.className = 'j-desc';
+  jobDiv.innerHTML = `
+  <img
+    class="j-desc__company-image"
+    
+  />
+  <div class="j-desc__details">
+    <h2 class="j-desc__job-title">
+      
+    </h2>
+    <p class="j-desc__company"></p>
+    <ul class="j-desc__metadata">
+      <li class="j-desc__location></li>
+      <li class="j-desc__salary></li>
+      <li class="j-desc__posting_date></li>
+    </ul>
+  </div>
+  `;
+
+  const{ imgae: { src, alt }, company,title, salary, location, postingDate } = job;
+  console.log(src, alt, company, title, salary, location, postingDate);
+
+  const img = document.querySelector(".j-desc__company-image");
+  img.setAttribute("src", src);
+  img.setAttribute("alt", alt);
+  jobDiv.querySelector(".j-desc__title").textContent = title; 
+  jobDiv.querySelector(".j-desc__company").textContent = company;
+  jobDiv.querySelector(".j-desc__location").textContent = location;
+  jobDiv.querySelector(".j-desc__salary").textContent = salary;
+  jobDiv.querySelector(".j-desc__posting_date").textContent = postingDate;
+
+
+
+
+
+
+
+}
