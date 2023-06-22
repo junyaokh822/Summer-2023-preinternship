@@ -173,10 +173,19 @@ function createNewJob() {
   jobDiv.querySelector(".j-desc__salary").textContent = salary;
   jobDiv.querySelector(".j-desc__posting_date").textContent = postingDate;
 
+  document.querySelector('section#jobs').append(jobDiv);
 
 
 
 
 
+}
 
+createNewJob(jobs[3]);
+createNewJob(jobs[4]);
+
+for (let i = 0; i < jobTitles.length; i++) {
+  jobTitles[i].onclick = function() {
+    alert("You clicked on " + this.textContent);
+  };
 }
