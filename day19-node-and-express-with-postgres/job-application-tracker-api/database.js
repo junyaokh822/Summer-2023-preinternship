@@ -11,4 +11,44 @@ const pool = new Pool({
   port: process.env.DB_PORT
 });
 
-module.exports = pool;
+const createTableQuery = `
+  CREATE TABLE IF NOT EXISTS job_applications (
+    id SERIAL PRIMARY KEY,
+    company VARCHAR(100) NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    minSalary INTEGER,
+    maxSalary INTEGER,
+    location VARCHAR(100),
+    postDate DATE,
+    jobPostUrl TEXT,
+    applicationDate DATE,
+    lastContactDate DATE,
+    companyContact VARCHAR(100),
+    status INTEGER NOT NULL DEFAULT 1
+  );
+`;
+
+const createTable = async () => {
+    try {
+      await pool.query(createTableQuery);
+      console.log('Table created successfully');
+    } catch (err) {
+      console.error('Error executing query', err.stack);
+    }
+  };
+  
+  createTable();
+
+  module.exports = {
+    query: (text, params, callback) => {
+      console.log("QUERY:", text, params || "");
+      return pool.query(text, params, callback);
+    },
+  };
+
+
+
+
+
+
+//ALTER DATABASE job_app_tracker OWNER TO dev_db_user;
