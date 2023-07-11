@@ -5,18 +5,11 @@ const jobs = require("./jobs");
 const { query } = require('./database');
 require("dotenv").config();
 
-// app.use((req, res, next) => {
 
-//   res.on("finish", () => {
-//     // the 'finish' event will be emitted when the response is handed over to the OS
-//     console.log(`Request: ${req.method} ${req.originalUrl} ${res.statusCode}`);
-//   });
-//   next();
-// });
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.originalUrl}`)
   res.on("finish", () => {
-    // the 'finish' event will be emitted when the response is handed over to the OS
+    
     console.log(`Response status: ${res.statusCode}`);
   });
   next();
@@ -34,9 +27,6 @@ app.get("/", (req, res) => {
 });
 
 // Get all the jobs
-// app.get("/jobs", (req, res) => {
-//   res.send(jobs);
-// });
 app.get("/jobs", async (req, res) => {
   try {
     const allJobs = await query("SELECT * FROM job_applications");
@@ -49,15 +39,6 @@ app.get("/jobs", async (req, res) => {
 });
 
 // Get a specific job
-// app.get("/jobs/:id", (req, res) => {
-//   const jobId = parseInt(req.params.id, 10);
-//   const job = jobs.find((j) => j.id === jobId);
-//   if (job) {
-//     res.send(job);
-//   } else {
-//     res.status(404).send({ message: "Job not found" });
-//   }
-// });
 app.get("/jobs/:id", async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
@@ -78,16 +59,6 @@ app.get("/jobs/:id", async (req, res) => {
 
 
 // Create a new job
-// app.post("/jobs", (req, res) => {
-//   const newJob = {
-//     ...req.body,
-//     id: getNextIdFromCollection(jobs),
-//   };
-//   jobs.push(newJob);
-//   console.log("newJob", newJob);
-//   res.status(201).send(newJob);
-// });
-
 app.post("/jobs", async (req, res) => {
   const { company, title, minSalary, maxSalary, location, postDate, jobPostUrl, applicationDate, lastContactDate, companyContact, status } = req.body;
 
@@ -105,44 +76,6 @@ app.post("/jobs", async (req, res) => {
 });
 
 // Update a specific job
-// app.patch("/jobs/:id", (req, res) => {
-//   const jobId = parseInt(req.params.id, 10);
-//   const jobUpdates = req.body;
-//   const jobIndex = jobs.findIndex((job) => job.id === jobId);
-//   if (jobIndex !== -1) {
-//     const originalJob = jobs[jobIndex];
-//     const updatedJob = {
-//       ...originalJob,
-//       ...jobUpdates,
-//     };
-//     jobs[jobIndex] = updatedJob;
-//     res.send(updatedJob);
-//   } else {
-//     res.status(404).send({ message: "Job not found" });
-//   }
-// });
-
-// app.patch("/jobs/:id", async (req, res) => {
-//   const jobId = parseInt(req.params.id, 10);
-
-//   const { company, title, minSalary, maxSalary, location, postDate, jobPostUrl, applicationDate, lastContactDate, companyContact, status } = req.body;
-
-//   try {
-//     const updatedJob = await query(
-//       "UPDATE job_applications SET company = $1, title = $2, minSalary = $3, maxSalary = $4, location = $5, postDate = $6, jobPostUrl = $7, applicationDate = $8, lastContactDate = $9, companyContact = $10, status = $11 WHERE id = $12 RETURNING *",
-//       [company, title, minSalary, maxSalary, location, postDate, jobPostUrl, applicationDate, lastContactDate, companyContact, status, jobId]
-//     );
-
-//     if (updatedJob.rows.length > 0) {
-//       res.status(200).json(updatedJob.rows[0]);
-//     } else {
-//       res.status(404).send({ message: "Job not found" });
-//     }
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
-
 app.patch("/jobs/:id", async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
@@ -185,22 +118,6 @@ app.patch("/jobs/:id", async (req, res) => {
 
 
 // Delete a specific job
-// app.delete("/jobs/:id", (req, res) => {
-//   const jobId = parseInt(req.params.id, 10);
-//   const jobIndex = jobs.findIndex((job) => job.id === jobId);
-//   if (jobIndex !== -1) {
-//     jobs.splice(jobIndex, 1);
-//     res.send({ message: "Job deleted successfully" });
-//   } else {
-//     res.status(404).send({ message: "Job not found" });
-//   }
-// });
-
-// app.listen(port, () => {
-//   console.log(`Server is running at http://localhost:${port}`);
-// });
-
-
 app.delete("/jobs/:id", async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
