@@ -29,7 +29,7 @@ module.exports = {
       post_date: {
         type: Sequelize.DATE
       },
-      job_postUrl: {
+      job_post_url: {
         type: Sequelize.STRING
       },
       application_date: {
