@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.User);
       this.belongsToMany(models.Tag, {
-        through: 'JobApplicationTag'
-      });
+        through: "JobApplicationTag"
+      })
     }
   }
   JobApplication.init(

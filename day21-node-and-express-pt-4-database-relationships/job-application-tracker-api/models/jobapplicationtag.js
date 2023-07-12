@@ -3,6 +3,9 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class JobApplicationTag extends Model {
     static associate(models) {
+      // optional...
+      // this.belongsTo(models.Tag);
+      // this.belongsTo(models.JobApplication);
     }
   }
   JobApplicationTag.init(
