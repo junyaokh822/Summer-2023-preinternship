@@ -33,6 +33,7 @@ module.exports = {
           status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
+          UserId: userId
         },
         {
           company: "Jobot",
@@ -45,6 +46,7 @@ module.exports = {
           status: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
+          UserId: userId
         },
         {
           company: "Braintrust",
@@ -57,6 +59,7 @@ module.exports = {
           status: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
+          UserId: userId
         },
         {
           company: "Underdog.io",
@@ -69,6 +72,7 @@ module.exports = {
           status: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
+          UserId: userId
         },
       ],
       {}
