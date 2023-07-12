@@ -84,3 +84,9 @@ module.exports = {
     await queryInterface.bulkDelete("users", null, {});
   },
 };
+
+
+// //after finish Verification 
+// npx sequelize-cli db:seed:undo
+// //then
+// npx sequelize-cli db:seed:all
