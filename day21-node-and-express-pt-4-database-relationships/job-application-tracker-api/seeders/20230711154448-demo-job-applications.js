@@ -79,9 +79,12 @@ module.exports = {
     );
   },
 
+  
+
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete("job_applications", null, {});
     await queryInterface.bulkDelete("users", null, {});
+    await queryInterface.bulkDelete("tags", null, {});
   },
 };
 

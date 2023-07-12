@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
   class JobApplication extends Model {
     static associate(models) {
       this.belongsTo(models.User);
+      this.belongsToMany(models.Tag, {
+        through: 'JobApplicationTag'
+      });
     }
   }
   JobApplication.init(
