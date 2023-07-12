@@ -18,7 +18,7 @@ module.exports = {
     const users = await queryInterface.sequelize.query(`SELECT id FROM users`);
 
     const userId = users[0][0].id;
-    
+
     await queryInterface.bulkInsert(
       "job_applications",
       [
@@ -77,9 +77,29 @@ module.exports = {
       ],
       {}
     );
+    await queryInterface.bulkInsert("tags", [
+      {
+        name: "Remote",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Onsite",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Part-Time",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Contract",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
   },
-
-  
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete("job_applications", null, {});
