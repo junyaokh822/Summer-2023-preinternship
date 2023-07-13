@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 4000;
 const bcrypt = require("bcryptjs");
+const session = require('express-session');
 const { JobApplication, User } = require("./models");
 require("dotenv").config();
 
@@ -15,35 +16,41 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 3600000 // 1 hour
+  },
+}));
+
 app.get("/", (req, res) => {
   res.send("Welcome to the Job App Tracker API!!!!");
 });
 
-// Get all the jobs
-app.get("/jobs", async (req, res) => {
-  try {
-    const allJobs = await JobApplication.findAll();
 
-    res.status(200).json(allJobs);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: err.message });
+const authenticateUser = (req, res, next) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: 'You must be logged in to view this page.' });
   }
-});
-
+  next();
+};
 
 
 //signup
 app.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
+  
   try {
     const user = await User.create({
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
     });
-
+    req.session.userId = user.id;//auto log the user in after they successfully login
     // Send a response to the client informing them that the user was successfully created
     res.status(201).json({
       message: "User created!",
@@ -81,7 +88,7 @@ app.post('/login', async (req, res) => {
     bcrypt.compare(req.body.password, user.password, (error, result) => {
       if (result) {
         // Passwords match
-        // TODO: Create a session for this user
+        req.session.userId = user.id;
 
         res.status(200).json({
           message: 'Logged in successfully',
@@ -101,9 +108,34 @@ app.post('/login', async (req, res) => {
 });
 
 
+//Logging Out a User and Destroying the Session
+app.delete('/logout', (req, res) => {
+  req.session.destroy(err => {
+      if (err) {
+          return res.sendStatus(500);
+      }
+
+      res.clearCookie('connect.sid');
+      return res.sendStatus(200);
+  });
+});
+
+
+// Get all the jobs
+app.get("/jobs", authenticateUser,async (req, res) => {
+  try {
+    const allJobs = await JobApplication.findAll();
+
+    res.status(200).json(allJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: err.message });
+  }
+});
+
 
 // Get a specific job
-app.get("/jobs/:id", async (req, res) => {
+app.get("/jobs/:id", authenticateUser, async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
   try {
@@ -121,7 +153,7 @@ app.get("/jobs/:id", async (req, res) => {
 });
 
 // Create a new job
-app.post("/jobs", async (req, res) => {
+app.post("/jobs", authenticateUser, async (req, res) => {
   try {
     const newJob = await JobApplication.create(req.body);
 
@@ -136,7 +168,7 @@ app.post("/jobs", async (req, res) => {
 });
 
 // Update a specific job
-app.patch("/jobs/:id", async (req, res) => {
+app.patch("/jobs/:id", authenticateUser, async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
   try {
@@ -160,7 +192,7 @@ app.patch("/jobs/:id", async (req, res) => {
 });
 
 // Delete a specific job
-app.delete("/jobs/:id", async (req, res) => {
+app.delete("/jobs/:id", authenticateUser, async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
   try {
