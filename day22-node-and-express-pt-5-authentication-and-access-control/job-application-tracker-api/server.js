@@ -40,6 +40,17 @@ const authenticateUser = (req, res, next) => {
 };
 
 
+const authorizeModification = async (req, res, model, id) => {
+  const record = await model.findOne({ where: { id: id } });
+  if (record && record.UserId !== parseInt(req.session.userId, 10)) {
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform that action." });
+  }
+};
+
+
+
 //signup
 app.post("/signup", async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -172,6 +183,12 @@ app.patch("/jobs/:id", authenticateUser, async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
   try {
+    const record = await JobApplication.findOne({ where: { id: jobId } });
+    if (record && record.UserId !== parseInt(req.session.userId, 10)) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform that action." });
+    }
     const [numberOfAffectedRows, affectedRows] = await JobApplication.update(
       req.body,
       { where: { id: jobId }, returning: true }
@@ -196,6 +213,12 @@ app.delete("/jobs/:id", authenticateUser, async (req, res) => {
   const jobId = parseInt(req.params.id, 10);
 
   try {
+    const record = await JobApplication.findOne({ where: { id: jobId } });
+    if (record && record.UserId !== parseInt(req.session.userId, 10)) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform that action." });
+    }
     const deleteOp = await JobApplication.destroy({ where: { id: jobId } });
 
     if (deleteOp > 0) {
