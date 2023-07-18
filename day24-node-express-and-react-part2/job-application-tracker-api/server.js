@@ -47,7 +47,6 @@ app.use(notFoundErrorHandler);
 // routes
 app.use("/api/auth", authRouter);
 app.use("/api/jobs", jobsRouter);
-
 app.use("/api/notes", notesRouter);
 
 app.listen(port, () => {
