@@ -12,6 +12,8 @@ const {
   notFoundErrorHandler,
 } = require("./middleware/errorHandlers");
 
+const notesRouter = require("./routes/notes");
+
 app.use(
   cors({
     origin: "http://127.0.0.1:5173",
@@ -46,6 +48,7 @@ app.use(notFoundErrorHandler);
 app.use("/api/auth", authRouter);
 app.use("/api/jobs", jobsRouter);
 
+app.use("/api/notes", notesRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

@@ -6,21 +6,27 @@ export async function action({ request, params }) {
   jobData.minSalary = parseInt(jobData.minSalary);
   jobData.maxSalary = parseInt(jobData.maxSalary);
   jobData.status = 1;
-  const response = await fetch("http://localhost:3000/jobs", {
+  const response = await fetch("/api/jobs", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(jobData),
   });
-  return redirect("/");
+  if (response.ok) {
+    return redirect("/");
+  }
+  const { errors } = await response.json();
+  return errors;
 }
 
 function AddJob() {
+  const errors = useActionData();
   return (
     <Form method="post" className="selection:bg-blue-200 flex flex-col gap-2">
       <h1 className="text-white">Add Job Posting</h1>
 
+      {errors && <div className="text-red-500">{errors}</div>}
       <fieldset className="flex flex-col">
         <label htmlFor="title">Job Title</label>
         <input

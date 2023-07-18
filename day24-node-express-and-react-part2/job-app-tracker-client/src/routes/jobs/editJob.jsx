@@ -1,8 +1,15 @@
-import { Form, useLoaderData, Link, redirect } from "react-router-dom";
+import {
+  Form,
+  redirect,
+  useActionData,
+  useLoaderData,
+  Link,
+} from "react-router-dom";
 import { statusTextById } from "../../utils";
 
 export async function loader({ params }) {
-  const jobResponse = await fetch(`http://localhost:3000/jobs/${params.jobId}`);
+  // remove localhost from api url in the loader
+  const jobResponse = await fetch(`/api/jobs/${params.jobId}`);
   const job = await jobResponse.json();
   return { job };
 }
@@ -13,21 +20,27 @@ export async function action({ request, params }) {
   const preparedJob = {
     ...updates,
     minSalary: parseInt(updates.minSalary),
-    maxSalary: parseInt(updates.maxSalary)
-  }
-  const response = await fetch(`http://localhost:3000/jobs/${params.jobId}`, { 
-    method: "PATCH", 
+    maxSalary: parseInt(updates.maxSalary),
+  };
+  const response = await fetch(`/api/jobs/${params.jobId}`, {
+    method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(preparedJob)
-  })
-  
-  return redirect(`/jobs/${params.jobId}`)
+    body: JSON.stringify(preparedJob),
+  });
+
+  if (response.ok) {
+    return redirect(`/jobs/${params.jobId}`);
+  }
+
+  const { errors } = await response.json();
+  return errors;
 }
 
 function EditJob() {
   const { job } = useLoaderData();
+  const errors = useActionData();
 
   const statusOptions = Object.keys(statusTextById).map((id) => {
     return (
@@ -42,6 +55,7 @@ function EditJob() {
       <Link to={`/jobs/${job.id}`}>{"<"} Back</Link>
       <Form method="post" className="selection:bg-blue-200 flex flex-col gap-2">
         <h1 className="text-white">Edit Job Posting</h1>
+        {errors && <div className="text-red-500">{errors}</div>}
         <div className="sm:flex gap-2 items-center justify-between">
           <fieldset className="sm:w-1/3 flex flex-col">
             <label htmlFor="status">Status</label>

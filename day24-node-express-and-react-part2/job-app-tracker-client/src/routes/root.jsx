@@ -1,6 +1,6 @@
-// src/routes/root.jsx
+// root.jsx
 import { useContext } from "react";
-import { Link, Outlet, useNavigation, Form, redirect } from "react-router-dom";
+import { Link, Outlet, useNavigation, redirect, Form } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import classNames from "classnames";
 import { AuthContext } from "../contexts/AuthContext";
@@ -9,6 +9,12 @@ function Root() {
   const { currentUser, logout } = useContext(AuthContext);
   const navigation = useNavigation();
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
+    redirect("/login");
+  }
+
   const outletClasses = classNames(
     "mx-auto max-w-4xl sm:px-12 px-4 transition-opacity",
     {
@@ -16,13 +22,6 @@ function Root() {
       "opacity-50": navigation.state === "loading",
     }
   );
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    logout();
-    redirect("/login");
-  };
-
   return (
     <div>
       <nav className="bg-blue-900 h-14 flex justify-items-center justify-between">
@@ -51,3 +50,24 @@ function Root() {
 }
 
 export default Root;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

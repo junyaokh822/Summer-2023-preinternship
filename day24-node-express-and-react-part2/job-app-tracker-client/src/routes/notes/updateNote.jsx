@@ -1,15 +1,12 @@
+// src/routes/notes/updateNote.jsx
 export async function action({ params, request }) {
   const formData = await request.formData();
-  const preparedNote = {
-    ...Object.fromEntries(formData),
-    timestamp: new Date(),
-  };
-  const response = await fetch(`http://localhost:3000/notes/${params.noteId}`, {
+  const response = await fetch(`/api/notes/${params.noteId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(preparedNote),
+    body: JSON.stringify(Object.fromEntries(formData)),
   });
   return null;
 }

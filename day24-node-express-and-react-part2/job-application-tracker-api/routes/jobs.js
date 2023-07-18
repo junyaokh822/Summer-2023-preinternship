@@ -35,7 +35,9 @@ const handleErrors = (err, res) => {
 // Get all the jobs
 router.get("/", authenticateUser, async (req, res) => {
   try {
-    const allJobs = await JobApplication.findAll();
+    const allJobs = await JobApplication.findAll({
+      where: { UserId: req.session.userId },
+    });
 
     res.status(200).json(allJobs);
   } catch (err) {
@@ -45,15 +47,18 @@ router.get("/", authenticateUser, async (req, res) => {
 });
 
 // Get a specific job
-router.get("/:id", authenticateUser, async (req, res) => {
+router.get("/", authenticateUser, async (req, res) => {
   try {
-    const job = await getJob(req.params.id);
-
-    if (job) {
-      res.status(200).json(job);
-    } else {
-      res.status(404).send({ message: "Job not found" });
+    const whereClause = { UserId: req.session.userId };
+    if (req.query.status) {
+      whereClause.status = req.query.status;
     }
+    console.log(whereClause);
+    const allJobs = await JobApplication.findAll({
+      where: whereClause,
+    });
+
+    res.status(200).json(allJobs);
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: err.message });
@@ -63,7 +68,10 @@ router.get("/:id", authenticateUser, async (req, res) => {
 // Create a new job
 router.post("/", authenticateUser, async (req, res) => {
   try {
-    const newJob = await JobApplication.create(req.body);
+    const newJob = await JobApplication.create({
+      ...req.body,
+      UserId: req.session.userId,
+    });
 
     res.status(201).json(newJob);
   } catch (err) {
